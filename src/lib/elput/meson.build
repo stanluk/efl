@@ -15,7 +15,7 @@ elput_src = [
   'elput_private.h'
 ]
 
-elput_deps += dependency('libinput', version : ['>=1.7.0'])
+elput_deps += dependency('libinput', version : ['>=1.6.0'])
 elput_deps += dependency('xkbcommon', version : ['>=0.3.0'])
 elput_deps += dependency('libudev')
 if get_option('systemd')
