@@ -172,6 +172,34 @@ option('ecore_imf',
   description : 'build evas'
 )
 
+# Bindings
+
+option('eolian_cxx',
+  type : 'boolean',
+  value : true,
+  description : 'build eolian_cxx'
+)
+
+option('eina_cxx',
+  type: 'boolean',
+  value: true,
+  description:  'build eina_cxx'
+)
+
+option('eo_cxx',
+  type: 'boolean',
+  value: true,
+  description:  'build eo_cxx'
+)
+
+option('ecore_cxx',
+  type: 'boolean',
+  value: true,
+  description:  'build ecore_cxx'
+)
+
+# Other options
+
 option('build-id',
   type : 'string',
   value : 'none',

@@ -55,12 +55,16 @@ local_tests = join_paths('src', 'tests')
 local_benchmark = join_paths('src', 'benchmarks')
 local_examples = join_paths('src', 'examples')
 local_scripts = join_paths('src', 'scripts')
+local_bindings = join_paths('src', 'bindings')
 
 add_global_arguments('-DHAVE_CONFIG_H=1', language: 'c')
+add_global_arguments('-DHAVE_CONFIG_H=1', language: 'cpp')
 add_global_arguments('-D_GNU_SOURCE=1', language: 'c')
 
 add_global_arguments('-DEFL_EO_API_SUPPORT=1', language: 'c')
 add_global_arguments('-DEFL_BETA_API_SUPPORT=1', language: 'c')
+add_global_arguments('-DEFL_EO_API_SUPPORT=1', language: 'cpp')
+add_global_arguments('-DEFL_BETA_API_SUPPORT=1', language: 'cpp')
 add_global_arguments('-DEFL_EO_API_SUPPORT=1', language: 'objc')
 add_global_arguments('-DEFL_BETA_API_SUPPORT=1', language: 'objc')
 
@@ -115,36 +119,40 @@ endif
 ecore_evas_wayland_engine_include_dir = []
 
 subprojects = [
-# name              | mod  | lib  | bin  | bench | tests | examples | name of static libs
-['eina'             , false,  true,  true,  true,  true,  true, []],
-['eolian'           , false,  true,  true, false,  true, false, []],
-['eo'               , false,  true, false,  true,  true, false, []],
-['efl'              , false,  true, false, false,  true, false, []],
-['emile'            , false,  true, false, false,  true,  true, ['lz4', 'rg_etc']],
-['eet'              , false,  true,  true, false,  true,  true, []],
-['ecore'            , false,  true, false, false, false, false, ['buildsystem']],
-['eldbus'           , false,  true,  true, false,  true,  true, []],
-['ecore'            ,  true, false, false, false,  true,  true, []], #ecores modules depend on eldbus
-['ecore_audio'      , false,  true, false, false, false, false, []],
-['ecore_avahi'      , false,  true, false, false, false,  true, []],
-['ecore_con'        , false,  true,  true, false,  true, false, ['http-parser']],
-['ecore_file'       , false,  true, false, false, false, false, []],
-['eeze'             ,  true,  true, false, false,  true, false, []],
-['ecore_input'      , false,  true, false, false, false, false, []],
-['ecore_x'          , false,  true, false, false, false, false, []],
-['ecore_fb'         , false,  true, false, false, false, false, []],
-['ecore_wl2'        , false,  true, false, false, false, false, ['libdrm']],
-['ecore_ipc'        , false,  true, false, false, false, false, []],
-['ecore_buffer'     ,  true,  true,  true, false, false, false, []],
-['ector'            , false,  true, false, false,  true, false, ['draw', 'triangulator', 'freetype']],
-['elput'            , false,  true, false, false,  true, false, []],
-['ecore_drm2'       , false,  true, false, false, false, false, []],
-['ecore_cocoa'      , false,  true, false, false, false, false, []],
-['evas'             ,  true,  true, false, false,  true,  true, ['vg_common', 'libunibreak']],
-['evas_goal'        , false,  true, false, false, false, false, []],
-['ecore_input_evas' , false,  true, false, false, false, false, []],
-['ecore_evas'       ,  true,  true, false, false, false, false, []],
-['ecore_imf'        ,  true,  true, false, false, false, false, []],
+# name              | mod  | lib  | bin  | bench | tests | examples | bindings | name of static libs
+['eina'             , false,  true,  true,  true,  true,  true,    '', []],
+['eolian'           , false,  true,  true, false,  true, false,    '', []],
+['eo'               , false,  true, false,  true,  true, false,    '', []],
+['efl'              , false,  true, false, false,  true, false,    '', []],
+['emile'            , false,  true, false, false,  true,  true,    '', ['lz4', 'rg_etc']],
+['eet'              , false,  true,  true, false,  true,  true,    '', []],
+['ecore'            , false,  true, false, false, false, false,    '', ['buildsystem']],
+['eldbus'           , false,  true,  true, false,  true,  true,    '', []],
+['ecore'            ,  true, false, false, false,  true,  true,    '', []], #ecores modules depend on eldbus
+['ecore_audio'      , false,  true, false, false, false, false,    '', []],
+['ecore_avahi'      , false,  true, false, false, false,  true,    '', []],
+['ecore_con'        , false,  true,  true, false,  true, false,    '', ['http-parser']],
+['ecore_file'       , false,  true, false, false, false, false,    '', []],
+['eeze'             ,  true,  true, false, false,  true, false,    '', []],
+['ecore_input'      , false,  true, false, false, false, false,    '', []],
+['ecore_x'          , false,  true, false, false, false, false,    '', []],
+['ecore_fb'         , false,  true, false, false, false, false,    '', []],
+['ecore_wl2'        , false,  true, false, false, false, false,    '', ['libdrm']],
+['ecore_ipc'        , false,  true, false, false, false, false,    '', []],
+['ecore_buffer'     ,  true,  true,  true, false, false, false,    '', []],
+['ector'            , false,  true, false, false,  true, false,    '', ['draw', 'triangulator', 'freetype']],
+['elput'            , false,  true, false, false,  true, false,    '', []],
+['ecore_drm2'       , false,  true, false, false, false, false,    '', []],
+['ecore_cocoa'      , false,  true, false, false, false, false,    '', []],
+['evas'             ,  true,  true, false, false,  true,  true,    '', ['vg_common', 'libunibreak']],
+['evas_goal'        , false,  true, false, false, false, false,    '', []],
+['ecore_input_evas' , false,  true, false, false, false, false,    '', []],
+['ecore_evas'       ,  true,  true, false, false, false, false,    '', []],
+['ecore_imf'        ,  true,  true, false, false, false, false,    '', []],
+['eina_cxx'         , false, false, false, false, false, false, 'cxx', []], # FIXME examples tests missing
+['eo_cxx'           , false, false, false, false, false, false, 'cxx', []], # FIXME examples and tests missing
+['ecore_cxx'        , false, false, false, false, false, false, 'cxx', []], # FIXME examples and tests missing
+['eolian_cxx'       , false,  true,  true, false, false, false,    '', []], # FIXME examples and tests missing
 ]
 
 # We generate Efl_Config.h and config.h later, they will be available here
@@ -167,7 +175,7 @@ foreach package : subprojects
     dir_package_include = join_paths(dir_include, package_version_name)
     dir_package_modules = join_paths(dir_lib, package_name, 'modules')
 
-    foreach static_lib : package[7]
+    foreach static_lib : package[8]
       subdir(join_paths('src', 'static_libs', static_lib))
     endforeach
 
@@ -188,6 +196,9 @@ foreach package : subprojects
     endif
     if (package[6])
        example_dirs += [package_name]
+    endif
+    if (package[7] != '')
+       subdir(join_paths(local_bindings, package[7], package_name))
     endif
 
     set_variable('build_'+package_name, true)
