@@ -10,7 +10,6 @@ public class Libs {
     public const string Ecore = "@ECORE_DL_MONO@";
     public const string Eina = "@EINA_DL_MONO@";
     public const string Eo = "@EO_DL_MONO@";
-    public const string Eio = "@EO_DL_MONO@";
     public const string Evas = "@EVAS_DL_MONO@";
     public const string Evil = "@EVIL_DL_MONO@";
     public const string EcoreEvas = "@ECORE_EVAS_DL_MONO@";

@@ -130,6 +130,12 @@ lib/evas/canvas/efl_vg_gradient_linear.eo.cs \
 lib/evas/canvas/efl_vg_root_node.eo.cs \
 lib/evas/canvas/efl_vg_shape.eo.cs
 
+efl_eolian_blacklisted_files = \
+lib/efl/interfaces/efl_io_buffer.eo.cs \
+lib/efl/interfaces/efl_io_positioner.eo.cs \
+lib/efl/interfaces/efl_io_queue.eo.cs \
+lib/efl/interfaces/efl_io_sizer.eo.cs
+
 ecore_eolian_blacklisted_files = \
 lib/ecore/efl_io_closer_fd.eo.cs \
 lib/ecore/efl_io_buffered_stream.eo.cs \
@@ -141,7 +147,8 @@ lib/ecore/efl_io_sizer_fd.eo.cs \
 lib/ecore/efl_io_stdin.eo.cs \
 lib/ecore/efl_io_stdout.eo.cs \
 lib/ecore/efl_io_stderr.eo.cs \
-lib/ecore/efl_io_file.eo.cs
+lib/ecore/efl_io_file.eo.cs \
+lib/ecore/efl_io_copier.eo.cs
 
 eo_eolian_blacklisted_files = \
 lib/eo/efl_object_override.eo.cs
@@ -165,7 +172,6 @@ $(eo_eolian_blacklisted_files) \
 $(elementary_eolian_blacklisted_files)
 
 efl_eolian_mono_files = \
-$(filter-out $(eio_eolian_blacklisted_files),$(eio_eolian_files:%.eo=%.eo.cs)) \
 $(filter-out $(eo_eolian_blacklisted_files),$(eo_eolian_files:%.eo=%.eo.cs)) \
 $(filter-out $(ecore_eolian_blacklisted_files),$(ecore_eolian_files_public:%.eo=%.eo.cs)) \
 $(ecore_eolian_type_files:%.eot=%.eot.cs) \
@@ -306,11 +312,6 @@ lib/eo/%.eo.cs: lib/eo/%.eo $(_EOLIAN_MONO_DEP)
 	$(AM_V_EOLMONO) \
 	$(MKDIR_P) $(dir $@); \
 	$(EOLIAN_MONO) $(EOLIAN_FLAGS) $(EOLIAN_MONO_FLAGS) --dllimport eo -o $@ $(ALL_EO_REFS) $<
-
-lib/eio/%.eo.cs: lib/eio/%.eo $(_EOLIAN_MONO_DEP)
-	$(AM_V_EOLMONO) \
-	$(MKDIR_P) $(dir $@); \
-	$(EOLIAN_MONO) $(EOLIAN_FLAGS) $(EOLIAN_MONO_FLAGS) --dllimport eio -o $@ $(ALL_EO_REFS) $<
 
 lib/ecore/%.eo.cs: lib/ecore/%.eo $(_EOLIAN_MONO_DEP)
 	$(AM_V_EOLMONO) \
