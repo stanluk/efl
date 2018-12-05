@@ -315,6 +315,26 @@ struct klass
          if(!as_generator(*(async_function_definition(true))).generate(sink, implemented_methods, inherit_cxt))
            return false;
 
+         auto native_inherit_name = name_helpers::klass_native_inherit_name(cls);
+         std::string base_name;
+
+         if (!root)
+           {
+               EINA_LOG_ERR("Class is %s and parent is %s", cls.eolian_name.c_str(), cls.parent->eolian_name.c_str());
+              attributes::klass_def parent_klass(get_klass(*cls.parent, cls.unit), cls.unit);
+              base_name = name_helpers::klass_full_concrete_or_interface_name(parent_klass);
+              EINA_LOG_ERR("Base name is %s", base_name.c_str());
+           }
+         /* // Ops accessor */
+         if(!as_generator(
+                     scope_tab << "public " << (root ? "" : "new ") << "static Efl_Op_Description[] GetEoOps()\n"
+                     << scope_tab << "{\n"
+                     << scope_tab << scope_tab << "return " << native_inherit_name << ".GetEoOps()" <<
+                            (root ? "" : (".Concat(" + base_name + ".GetEoOps()).ToArray()")) << ";\n"
+                     << scope_tab << "}\n"
+                ).generate(sink, attributes::unused, inherit_cxt))
+           return false;
+
          if(!as_generator("}\n").generate(sink, attributes::unused, inherit_cxt)) return false;
        }
 
@@ -331,10 +351,11 @@ struct klass
        {
          auto inative_cxt = context_add_tag(class_context{class_context::inherit_native}, context);
          auto native_inherit_name = name_helpers::klass_native_inherit_name(cls);
+         auto inherit_name = name_helpers::klass_inherit_name(cls);
          if(!as_generator
             (
              "internal " << class_type << " " << native_inherit_name << " {\n"
-             << scope_tab << "public static byte class_initializer(IntPtr klass)\n"
+             << scope_tab << "public static Efl_Op_Description[] GetEoOps()\n"
              << scope_tab << "{\n"
              << scope_tab << scope_tab << "Efl_Op_Description[] descs = new Efl_Op_Description[" << grammar::int_ << "];\n"
             )
@@ -345,17 +366,28 @@ struct klass
          if(!as_generator(*(function_registration(index_generator, cls)))
             .generate(sink, helpers::get_all_implementable_methods(cls), inative_cxt)) return false;
 
+
+         if(!as_generator(
+                scope_tab << scope_tab << "return descs;\n"
+                << scope_tab << "}\n"
+            ).generate(sink, attributes::unused, inative_cxt))
+           return false;
+
          if(!as_generator
-            (   scope_tab << scope_tab << "IntPtr descs_ptr = Marshal.AllocHGlobal(Marshal.SizeOf(descs[0])*" << function_count << ");\n"
+            (scope_tab << "public static byte class_initializer(IntPtr klass)\n"
+             << scope_tab << "{\n"
+             << scope_tab << scope_tab << "var descs = " << inherit_name << ".GetEoOps();\n"
+             << scope_tab << scope_tab << "var count = descs.Length;\n"
+             << scope_tab << scope_tab << "IntPtr descs_ptr = Marshal.AllocHGlobal(Marshal.SizeOf(descs[0])*count);\n"
              << scope_tab << scope_tab << "IntPtr ptr = descs_ptr;\n"
-             << scope_tab << scope_tab << "for(int i = 0; i != " << function_count << "; ++i)\n"
+             << scope_tab << scope_tab << "for(int i = 0; i != count; ++i)\n"
              << scope_tab << scope_tab << "{\n"
              << scope_tab << scope_tab << scope_tab << "Marshal.StructureToPtr(descs[i], ptr, false);\n"
              << scope_tab << scope_tab << scope_tab << "ptr = IntPtr.Add(ptr, Marshal.SizeOf(descs[0]));\n"
              << scope_tab << scope_tab << "}\n"
              << scope_tab << scope_tab << "Efl_Object_Ops ops;\n"
              << scope_tab << scope_tab << "ops.descs = descs_ptr;\n"
-             << scope_tab << scope_tab << "ops.count = (UIntPtr)" << function_count << ";\n"
+             << scope_tab << scope_tab << "ops.count = (UIntPtr)count;\n"
              << scope_tab << scope_tab << "IntPtr ops_ptr = Marshal.AllocHGlobal(Marshal.SizeOf(ops));\n"
              << scope_tab << scope_tab << "Marshal.StructureToPtr(ops, ops_ptr, false);\n"
              << scope_tab << scope_tab << "Efl.Eo.Globals.efl_class_functions_set(klass, ops_ptr, IntPtr.Zero);\n"
