@@ -73,6 +73,7 @@ typedef struct _Efl_Text_Annotate_Annotation Efl_Text_Annotate_Annotation;
 
 /* Input and Output */
 #include "interfaces/efl_io_closer.eo.h"
+#include "interfaces/efl_io_writer.eo.h"
 
 #ifdef EFL_BETA_API_SUPPORT
 
@@ -168,7 +169,6 @@ typedef Efl_Gfx_Path_Command_Type Efl_Gfx_Path_Command;
 
 /* Input and Output */
 #include "interfaces/efl_io_reader.eo.h"
-#include "interfaces/efl_io_writer.eo.h"
 #include "interfaces/efl_io_sizer.eo.h"
 #include "interfaces/efl_io_positioner.eo.h"
 
