@@ -502,7 +502,6 @@ _efl_ui_relative_layout_efl_object_constructor(Eo *obj, Efl_Ui_Relative_Layout_D
 {
    obj = efl_constructor(efl_super(obj, MY_CLASS));
    efl_canvas_object_type_set(obj, MY_CLASS_NAME);
-   efl_access_object_access_type_set(obj, EFL_ACCESS_TYPE_SKIPPED);
    efl_access_object_role_set(obj, EFL_ACCESS_ROLE_FILLER);
 
    pd->obj = obj;
