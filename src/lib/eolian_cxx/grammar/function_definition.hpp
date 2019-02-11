@@ -121,23 +121,24 @@ struct function_definition_generator
                           << " __return_value = "
                           ).generate(sink, attributes::unused, ctx)) return false;
 
-      std::tuple<std::string> params;
+      std::tuple<std::string, std::string, std::vector<attributes::parameter_def> > params;
       if (f.is_static)
-        params = std::make_tuple(f.c_name, f.parameters)
+        params = std::make_tuple(f.c_name, "", f.parameters);
       else
-        params = std::make_tuple(f.c_name, "_eo_ptr()", f.parameters)
+        params = std::make_tuple(f.c_name, "_eo_ptr()", f.parameters);
 
       if(!as_generator
-         (" ::" << string << "(" << string <<
-          *(
-            "\n" << scope_tab << scope_tab << ", "
+         (" ::" << string << "(" << string << ((!f.is_static && (f.parameters.size() > 0)) ? "," : "")
+          <<
+          (
+            ("\n" << scope_tab << scope_tab
             <<
             (
              attribute_conditional([] (attributes::parameter_def const& p)
              { return p.direction == attributes::parameter_direction::in; })
              [converting_argument]
              | ("& __out_param_" << attribute_reorder<2>(string))
-            )
+            )) % ","
           )
           << ");\n"
          ).generate(sink, params, ctx))
