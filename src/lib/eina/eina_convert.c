@@ -14,6 +14,10 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library;
  * if not, see <http://www.gnu.org/licenses/>.
+ *
+ * The code of eina_convert_strtod_c() is based on code published
+ * under the public domain license, which can be found here:
+ * https://gist.github.com/mattn/1890186
  */
 
 #ifdef HAVE_CONFIG_H
@@ -24,6 +28,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <errno.h>
+#include <ctype.h>
 
 #ifdef _WIN32
 # include <Evil.h>
@@ -453,14 +459,202 @@ eina_convert_atofp(const char *src, int length, Eina_F32p32 *fp)
    return EINA_TRUE;
 }
 
+/*
+ * https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/strtod-strtod-l-wcstod-wcstod-l?view=vs-2017
+ *
+ * src should be one of the following form :
+ *
+ * [whitespace] [sign] {digits [radix digits] | radix digits} [{e | E} [sign] digits]
+ * [whitespace] [sign] {INF | INFINITY}
+ * [whitespace] [sign] NAN [sequence]
+ *
+ * No hexadecimal form supported
+ * no sequence supported after NAN
+ */
 EAPI double
 eina_convert_strtod_c(const char *nptr, char **endptr)
 {
-#ifdef _WIN32
-   return _strtod_l(nptr, endptr, _eina_c_locale_get());
-#else
-   return strtod_l(nptr, endptr, _eina_c_locale_get());
-#endif
+   const char *iter;
+   const char *a;
+   double val;
+   unsigned long long integer_part;
+   int minus;
+
+   a = iter = nptr;
+
+   /* ignore leading whitespaces */
+   while (isspace(*iter))
+     iter++;
+
+   /* signed or not */
+   minus = 1;
+   if (*iter == '-')
+     {
+        minus = -1;
+        iter++;
+     }
+   else if (*iter == '+')
+     iter++;
+
+   if ((*iter == 'I') || (*iter == 'i'))
+     {
+        if ((strcasecmp(iter, "INF") == 0) ||
+            (strcasecmp(iter, "INFINITY") == 0))
+          {
+            if (strcasecmp(iter, "INF") == 0)
+              iter += 3;
+            else
+              iter += 8;
+             if (endptr)
+               *endptr = (char *)iter;
+             return (minus == -1) ? -INFINITY : INFINITY;
+          }
+        else
+          goto on_error;
+     }
+
+   if ((*iter == 'N') || (*iter == 'n'))
+     {
+        if (strcasecmp(iter, "NAN") == 0)
+          {
+             iter += 3;
+             if (endptr)
+               *endptr = (char *)iter;
+             return (minus == -1) ? -NAN : NAN;
+          }
+        else
+          goto on_error;
+     }
+
+   integer_part = 0;
+
+   /* (optional) integer part before dot */
+   if (isdigit(*iter))
+     {
+        for (; isdigit(*iter); iter++)
+          integer_part = integer_part * 10ULL + (unsigned long long)(*iter - '0');
+        a = iter;
+     }
+   else if (*iter != '.')
+     {
+        val = 0.0;
+        goto on_success;
+     }
+
+   val = (double)integer_part;
+
+   /* (optional) decimal part after dot */
+   if (*iter == '.')
+     {
+        unsigned long long decimal_part;
+        unsigned long long pow10;
+        int count;
+
+        iter++;
+
+        decimal_part = 0;
+        count = 0;
+        pow10 = 1;
+
+        if (isdigit(*iter))
+          {
+             for (; isdigit(*iter); iter++, count++)
+               {
+                  if (count < 19)
+                    {
+                       decimal_part = decimal_part * 10ULL +  + (unsigned long long)(*iter - '0');
+                       pow10 *= 10ULL;
+                    }
+               }
+          }
+        val += (double)decimal_part / (double)pow10;
+        a = iter;
+     }
+
+   /* (optional) exponent */
+   if ((*iter == 'e') || (*iter == 'E'))
+     {
+        double scale = 1.0;
+        unsigned int expo_part;
+        int minus_e;
+
+        iter++;
+
+        /* signed or not */
+        minus_e = 1;
+        if (*iter == '-')
+          {
+             minus_e = -1;
+             iter++;
+          }
+        else if (*iter == '+')
+          iter++;
+
+        /* exponential part */
+        expo_part = 0;
+        if (isdigit(*iter))
+          {
+            while (*iter == 0)
+              iter++;
+
+            for (; isdigit(*iter); iter++)
+              {
+                expo_part = expo_part * 10U + (unsigned int)(*iter - '0');
+              }
+          }
+        else if (!isdigit(*(a - 1)))
+          {
+             a = nptr;
+             goto on_success;
+          }
+        else if (*iter == 0)
+          goto on_success;
+
+        if ((val == 2.2250738585072011) && ((minus_e * (int)expo_part) == -308))
+          {
+            val = 0.0;
+            a = iter;
+            errno = ERANGE;
+            goto on_success;
+          }
+
+        if ((val == 2.2250738585072012) && ((minus_e * (int)expo_part) <= -308))
+          {
+            val *= 1.0e-308;
+            a = iter;
+            goto on_success;
+          }
+
+        a = iter;
+
+        while (expo_part >= 8U)
+          {
+            scale *= 1E8;
+            expo_part -= 8U;
+          }
+        while (expo_part > 0U)
+          {
+            scale *= 10.0;
+            expo_part--;
+          }
+
+        val = (minus_e == -1) ? (val / scale) : (val * scale);
+     }
+   else if ((iter > nptr) && !isdigit(*(iter - 1)))
+     {
+       a = nptr;
+       goto on_success;
+     }
+
+ on_success:
+   if (endptr)
+     *endptr = (char *)a;
+   return minus * val;
+
+ on_error:
+   if (endptr)
+     *endptr = (char *)nptr;
+   return 0.0;
 }
 
 /**
