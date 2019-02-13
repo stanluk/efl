@@ -51,15 +51,16 @@ if target_machine.system() == 'windows'
   ws2_32 = cc.find_library('ws2_32')
   secur32 = cc.find_library('secur32')
   uuid = cc.find_library('uuid')
+  msvcr100 = cc.find_library('msvcr100')
 
   evil_lib = library('evil', evil_src,
-    dependencies : [psapi, ole32, ws2_32, secur32, uuid],
+    dependencies : [psapi, ole32, ws2_32, secur32, uuid, msvcr100],
     include_directories : [config_dir, include_directories('regex')],
   )
 
   evil = declare_dependency(
     include_directories: [config_dir, include_directories('regex'), include_directories('.')],
-    dependencies : [psapi, ole32, ws2_32, secur32, uuid],
+    dependencies : [psapi, ole32, ws2_32, secur32, uuid, msvcr100],
     link_with: evil_lib,
   )
 else
