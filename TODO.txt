@@ -1,0 +1,21 @@
+-> refactor 
+
+Access:
+-> change Attributes into hash map
+-> add signal emit method, remove events
+-> improve state_set function
+
+Component:
+-> remove screen position, leave extents only
+-> restore layer property, add enums
+-> add enum to coordinate_type
+
+
+Action
+-> remove "actions" property
+-> remove setters
+
+Bridge:
+-> check if number of actions are > 0
+-> refactor getItems in cache to avoid cycles
+-> register Item in cache on construction.
