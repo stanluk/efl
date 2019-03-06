@@ -457,6 +457,22 @@ EAPI Eina_Accessor        *eina_array_accessor_new(const Eina_Array *array) EINA
 static inline Eina_Bool    eina_array_foreach(Eina_Array  *array,
                                               Eina_Each_Cb cb,
                                               void        *fdata);
+
+/**
+ * @brief Searches for a member (linear walk).
+ * @details This walks through an array by linearly looking for the given data compared by
+ *          the @p compare function.
+ *
+ * @param[in] array The array object
+ * @param[in] data The member to search using the @p compare function
+ * @param[in] compare The compare function
+ * @return The member index, otherwise @c -1 if not found
+ *
+ * @since 1.23
+ */
+EAPI int
+eina_array_search(const Eina_Array *array, const void *data, Eina_Compare_Cb compare);
+
 /**
  * @def EINA_ARRAY_ITER_NEXT
  * @brief Iterates through an array's elements.
