@@ -1,0 +1,208 @@
+import efl_access_types;
+
+class @beta Efl.Access.Context extends Efl.Object
+{
+   [[ Context class represents the minimal set of information which every
+      accessible object should provide.
+
+   The @Efl.Access.Context class should implement following interfaces in order to
+   provide additonal accessibility information for assistive technologies:
+
+   @Efl.Access.Component - for information about graphical representation of the object.
+   @Efl.Access.Action - for performing actions on the object.
+   @Efl.Access.Selection - for managing selection of objects child elements.
+   @Efl.Access.Text - for information about displayed text.
+   @Efl.Access.Editable.Text - for managing text in input like controls (copy, cut, paste).
+   @Efl.Access.Value - for managing numerical value.
+   ]]
+   data: Efl_Access_Context_Data;
+   methods {
+      @property access_name {
+         [[Accessible name of the object.]]
+         get {
+         }
+         set {
+         }
+         values {
+            name: string; [[Accessible name]]
+         }
+      }
+      @property relations {
+          [[Gets an all relations between accessible objects.]]
+           get {
+           }
+           values {
+                relations: array<ptr(Efl.Access.Relation2) @owned> @owned; [[Accessible relation set]]
+           }
+      }
+      @property role {
+         [[The role of the object in accessibility domain.]]
+         get {
+         }
+         set {
+         }
+         values {
+            role: Efl.Access.Role; [[Accessible role]]
+         }
+      }
+      @property access_children {
+         [[Gets object's accessible children.]]
+         get {
+         }
+         values {
+            children: array<Efl.Access.Object2> @owned; [[List of widget's children]]
+         }
+      }
+      @property access_parent {
+         [[Gets object's accessible parent.]]
+         get {
+         }
+         set {
+         }
+         values {
+            parent: Efl.Access.Object2; [[Widget's accessible parent. May differ from Eo parent or widget parent]]
+         }
+      }
+      @property attributes {
+         [[Gets key-value pairs indentifying object extra attributes. Must be free by a user.]]
+         get {
+         }
+         values {
+            attributes: array<ptr(Efl.Access.Attribute) @owned> @owned; [[List of object attributes, Must be freed by the user]]
+         }
+      }
+      attribute_append {
+         [[Add key-value pair identifying object extra attributes
+         ]]
+         params {
+            @in key: string; [[The string key to give extra information]]
+            @in value: string; [[The string value to give extra information]]
+         }
+      }
+      attribute_remove {
+         params {
+            @in key: string;
+         }
+      }
+      attributes_clear {
+         [[Removes all attributes in accessible object.]]
+      }
+      @property reading_info_type {
+         get {
+            [[Gets reading information types of an accessible object.]]
+         }
+         set {
+            [[Sets reading information of an accessible object.]]
+         }
+         values {
+            reading_info: Efl.Access.Reading.Info.Type; [[Reading information types]]
+         }
+      }
+      @property index_in_parent {
+         [[Gets index of the child in parent's children list.]]
+         get {
+         }
+         values {
+            idx: int; [[Index in children list]]
+         }
+      }
+      @property access_description {
+         [[Contextual information about object.]]
+         get {
+         }
+         set {
+         }
+         values {
+            description: string; [[Accessible contextual information]]
+         }
+      }
+      @property state_set {
+         [[Gets set describing object accessible states.]]
+         get {
+         }
+         values {
+            states: Efl.Access.State_Set; [[Accessible state set]]
+         }
+      }
+      @property translation_domain {
+         [[The translation domain of "name" and "description"
+           properties.
+
+           Translation domain should be set if the application wants to support i18n
+           for accessibility "name" and "description" properties.
+
+           When translation domain is set, values of "name" and "description"
+           properties will be translated with the dgettext function using the
+           current translation domain as the "domainname" parameter.
+
+           It is the application developer's responsibility to ensure that
+           translation files are loaded and bound to the translation domain
+           when accessibility is enabled.]]
+         get {
+         }
+         set {
+         }
+         values {
+            domain: string; [[Translation domain]]
+         }
+      }
+      @property locale {
+         [[ POSIX-style LC_MESSAGES locale tag for given object. Property could
+            be used by assistive technologies to enhance voice output.
+
+         By default locale property equals string returned by
+         setlocal(LC_MESSAGES, NULL) and in most cases should not
+         be changed manually.
+
+         The locale property should be only set when part of the application
+         is using different locale then one set for the whole system.
+         ]]
+         get {
+         }
+         set {
+         }
+         values {
+            locale: string; [[POSIX-style LC_MESSAGES compatible locale tag, UTF-8 encoded.]]
+         }
+      }
+      relationship_append {
+         [[Adds a relationship between source object and relation_object.
+
+           Relationships can be queried by Assistive Technology clients to
+           provide customized voice feedback, enhanced navigation etc.
+
+           Relationship_append API is asymmetric, which means that
+           appending, for example, relation EFL_ACCESS_RELATION_FLOWS_TO from object A to B,
+           do NOT append relation EFL_ACCESS_RELATION_FLOWS_FROM from object B to
+           object A.]]
+         params {
+            @in type: Efl.Access.Relation_Type; [[Relation type]]
+            @in relation_object: const(Efl.Access.Object2); [[Object to relate to]]
+         }
+      }
+      relationship_remove {
+         [[Removes the relationship between two accessible objects.
+
+          If relation_object is NULL function removes all relations
+          of the given type.
+         ]]
+         params {
+            @in type: Efl.Access.Relation_Type; [[Relation type]]
+            @in relation_object: const(Efl.Access.Object2) @nullable; [[Object to remove relation from]]
+         }
+      }
+      relationships_clear {
+         [[Removes all relationships in accessible object.]]
+      }
+      @property access_object {
+         values {
+            ao: Efl.Access.Object2;
+         }
+      }
+   }
+   implements {
+      Efl.Object.constructor;
+      Efl.Object.destructor;
+   }
+}
+

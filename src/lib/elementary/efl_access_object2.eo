@@ -1,0 +1,17 @@
+interface @beta Efl.Access.Object2
+{
+   [[ The @Efl.Access.Object interface should be implemented by any
+      UI and none UI object which should provide accessibility information for external
+      assistive technologies such as screen-readers, screen magnifiers, refreshable
+      braille displays etc.]]
+   methods {
+      @property access_context {
+         [[Gets an accessible context for object.]]
+         get {
+         }
+         values {
+            ctx: Efl.Access.Context; [[Accessibile context]]
+         }
+      }
+   }
+}
