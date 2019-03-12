@@ -440,3 +440,29 @@ eina_array_accessor_new(const Eina_Array *array)
 
    return &ac->accessor;
 }
+
+EAPI int
+eina_array_search(const Eina_Array *array, const void *data, Eina_Compare_Cb compare)
+{
+   EINA_SAFETY_ON_NULL_RETURN_VAL(array, -1);
+   EINA_SAFETY_ON_NULL_RETURN_VAL(compare, -1);
+   EINA_MAGIC_CHECK_ARRAY(array, -1);
+
+   unsigned int found, pos=-1;
+   void *p;
+
+   if (array->count == 0)
+     return -1;
+
+   for (pos = 0; pos < array->count; ++pos)
+     {
+        p = eina_array_data_get(array, pos);
+        found = compare(data, p);
+        if (found == 0)
+          break;
+     }
+   if (pos < array->count)
+     return pos;
+   else
+     return -1;
+}
