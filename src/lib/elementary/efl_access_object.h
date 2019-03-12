@@ -2,6 +2,8 @@
 #define EFL_ACCESS_H
 
 #ifdef EFL_BETA_API_SUPPORT
+typedef Eo Efl_Access_Object2;
+#include "efl_access_types.eot.h"
 #include "efl_access_object.eo.h"
 
 /*

@@ -1,0 +1,17 @@
+interface @beta Efl.Access.Provider
+{
+   [[ The @Efl.Access.Provider interface should be implemented by any
+      UI and none UI object which should provide accessibility information for external
+      assistive technologies such as screen-readers, screen magnifiers, refreshable
+      braille displays etc.]]
+   methods {
+      @property access_object {
+         [[Gets an accessible representation of the object.]]
+         get {
+         }
+         values {
+            obj: Efl.Access.Object2; [[Accessibile object]]
+         }
+      }
+   }
+}

@@ -1,0 +1,39 @@
+import efl_access_types;
+
+class @beta Efl.Access.Relation_Set
+{
+   methods {
+        add {
+             params {
+               @in rel: Efl.Access.Relation_Type;
+               @in target: Efl.Access.Object2;
+             }
+        }
+        remove {
+             params {
+               @in rel: Efl.Access.Relation_Type;
+               @in target: Efl.Access.Object2;
+             }
+        }
+        contains {
+             params {
+               @in rel: Efl.Access.Relation_Type;
+               @in target: Efl.Access.Object2;
+             }
+        }
+        remove_with_type {
+             params {
+               @in type: Efl.Access.Relation_Type;
+             }
+        }
+        remove_all {
+        }
+        @property relations {
+             get {
+             }
+             values {
+                 iter: iterator<ptr(Efl.Access.Relation)>;
+             }
+        }
+   }
+}

@@ -1,0 +1,196 @@
+import efl_access_types;
+
+class @beta Efl.Access.Object2 extends Efl.Object
+{
+   [[ Context class represents the minimal set of information which every
+      accessible object should provide.
+
+   The @Efl.Access.Object2 class should implement following interfaces in order to
+   provide additonal accessibility information for assistive technologies:
+
+   @Efl.Access.Component - for information about graphical representation of the object.
+   @Efl.Access.Action - for performing actions on the object.
+   @Efl.Access.Selection - for managing selection of objects child elements.
+   @Efl.Access.Text - for information about displayed text.
+   @Efl.Access.Editable.Text - for managing text in input like controls (copy, cut, paste).
+   @Efl.Access.Value - for managing numerical value.
+   ]]
+   data: Efl_Access_Object_Data;
+   methods {
+      @property access_name {
+         [[Accessible name of the object.]]
+         get {
+         }
+         set {
+         }
+         values {
+            name: string; [[Accessible name]]
+         }
+      }
+      @property access_description {
+         [[Contextual information about object.]]
+         get {
+         }
+         set {
+         }
+         values {
+            description: string; [[Accessible contextual information]]
+         }
+      }
+      @property role {
+         [[The role of the object in accessibility domain.]]
+         get {
+         }
+         set {
+         }
+         values {
+            role: Efl.Access.Role; [[Accessible role]]
+         }
+      }
+      @property access_children {
+         [[Gets object's accessible children.]]
+         get {
+         }
+         values {
+            children: array<Efl.Access.Object2> @owned; [[List of widget's children]]
+         }
+      }
+      @property access_parent {
+         [[Gets object's accessible parent.]]
+         get {
+         }
+         set {
+         }
+         values {
+            parent: Efl.Access.Object2; [[Widget's accessible parent. May differ from Eo parent or widget parent]]
+         }
+      }
+      @property attributes {
+         [[Gets key-value pairs indentifying object extra attributes. Must be free by a user.]]
+         get {
+         }
+         values {
+            attributes: iterator<const(ptr(Efl.Access.Attribute))>; [[Object attributes, Must be freed by the user]]
+         }
+      }
+      attribute_exists {
+         params {
+            @in key: string;
+         }
+         return: bool;
+      }
+      attribute_add {
+         params {
+            @in key: string;
+            @in value: string;
+         }
+      }
+      attribute_del {
+         params {
+            key: string;
+         }
+      }
+      attribute_del_all {
+      }
+      @property index_in_parent {
+         [[Gets index of the child in parent's children list.]]
+         get {
+         }
+         values {
+            idx: int; [[Index in children list]]
+         }
+      }
+      @property state_set {
+         [[Gets set describing object accessible states.]]
+         get {
+         }
+         values {
+            states: Efl.Access.State_Set; [[Accessible state set]]
+         }
+      }
+      @property translation_domain {
+         [[The translation domain of "name" and "description"
+           properties.
+
+           Translation domain should be set if the application wants to support i18n
+           for accessibility "name" and "description" properties.
+
+           When translation domain is set, values of "name" and "description"
+           properties will be translated with the dgettext function using the
+           current translation domain as the "domainname" parameter.
+
+           It is the application developer's responsibility to ensure that
+           translation files are loaded and bound to the translation domain
+           when accessibility is enabled.]]
+         get {
+         }
+         set {
+         }
+         values {
+            domain: string; [[Translation domain]]
+         }
+      }
+      @property locale {
+         [[ POSIX-style LC_MESSAGES locale tag for given object. Property could
+            be used by assistive technologies to enhance voice output.
+
+         By default locale property equals string returned by
+         setlocal(LC_MESSAGES, NULL) and in most cases should not
+         be changed manually.
+
+         The locale property should be only set when part of the application
+         is using different locale then one set for the whole system.
+         ]]
+         get {
+         }
+         set {
+         }
+         values {
+            locale: string; [[POSIX-style LC_MESSAGES compatible locale tag, UTF-8 encoded.]]
+         }
+      }
+      relation_add {
+           params {
+                @in type: Efl.Access.Relation_Type;
+                @in target: Efl.Access.Object2;
+           }
+      }
+      relation_del {
+           params {
+                @in type: Efl.Access.Relation_Type;
+                @in target: Efl.Access.Object2;
+           }
+      }
+      relation_del_by_type {
+           params {
+                @in type: Efl.Access.Relation_Type;
+           }
+      }
+      relation_del_all {
+      }
+      @property relation {
+          [[Gets an all relations between accessible objects.]]
+           get {
+           }
+           keys {
+               type: Efl.Access.Relation_Type;
+           }
+           values {
+                relations: const(ptr(Efl.Access.Relation2)); [[Accessible relation set]]
+           }
+      }
+      @property relations {
+          [[Gets an all relations between accessible objects.]]
+           get {
+           }
+           values {
+                relations: iterator<ptr(Efl.Access.Relation2)>; [[Accessible relation set]]
+           }
+      }
+   }
+   implements {
+      Efl.Object.constructor;
+      Efl.Object.destructor;
+   }
+}
+

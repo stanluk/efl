@@ -103,8 +103,10 @@ elm_public_eolian_files = \
 	lib/elementary/efl_ui_scroll_manager.eo \
 	lib/elementary/efl_ui_pan.eo \
 	lib/elementary/efl_access_object.eo \
+	lib/elementary/efl_access_object2.eo \
 	lib/elementary/efl_access_action.eo \
 	lib/elementary/efl_access_component.eo \
+	lib/elementary/efl_access_provider.eo \
 	lib/elementary/efl_access_editable_text.eo \
 	lib/elementary/efl_access_selection.eo \
 	lib/elementary/efl_access_text.eo \
@@ -194,7 +196,8 @@ elm_eolian_type_files = \
 	lib/elementary/efl_ui.eot \
 	lib/elementary/efl_ui_list_view_types.eot \
 	lib/elementary/efl_ui_selection_types.eot \
-	lib/elementary/efl_ui_dnd_types.eot
+	lib/elementary/efl_ui_dnd_types.eot \
+	lib/elementary/efl_access_types.eot
 
 elm_public_eolian_c = $(elm_public_eolian_files:%.eo=%.eo.c)
 elm_public_eolian_h = $(elm_public_eolian_files:%.eo=%.eo.h) \
@@ -649,6 +652,7 @@ includesdir = $(includedir)/elementary-@VMAJ@
 includesunstable_HEADERS = \
 	lib/elementary/elm_gen_common.h \
 	lib/elementary/efl_access_object.h \
+	lib/elementary/efl_access_object2.h \
 	lib/elementary/efl_access_text.h \
 	lib/elementary/efl_access_widget_action.h \
 	lib/elementary/efl_access_window.h \
@@ -1063,8 +1067,10 @@ lib_elementary_libelementary_la_SOURCES = \
 	lib/elementary/efl_ui_image.c \
 	lib/elementary/elm_index.c \
 	lib/elementary/efl_access_object.c \
+	lib/elementary/efl_access_object2.c \
 	lib/elementary/efl_access_action.c \
 	lib/elementary/efl_access_component.c \
+	lib/elementary/efl_access_provider.c \
 	lib/elementary/efl_access_editable_text.c \
 	lib/elementary/efl_access_selection.c \
 	lib/elementary/efl_access_text.c \

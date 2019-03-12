@@ -139,6 +139,7 @@ pub_eo_files = [
   'efl_ui_scroll_manager.eo',
   'efl_ui_pan.eo',
   'efl_access_object.eo',
+  'efl_access_object2.eo',
   'efl_access_action.eo',
   'efl_access_component.eo',
   'efl_access_editable_text.eo',
@@ -208,7 +209,8 @@ pub_eo_types_files = [
   'efl_ui.eot',
   'efl_ui_list_view_types.eot',
   'efl_ui_selection_types.eot',
-  'efl_ui_dnd_types.eot'
+  'efl_ui_dnd_types.eot',
+  'efl_access_types.eot'
 ]
 
 foreach eo_file : pub_eo_types_files
@@ -260,6 +262,7 @@ eolian_include_directories += ['-I', meson.current_source_dir()]
 elementary_headers_unstable = [
   'elm_gen_common.h',
   'efl_access_object.h',
+  'efl_access_object2.h',
   'efl_access_text.h',
   'efl_access_widget_action.h',
   'efl_access_window.h',
@@ -788,6 +791,7 @@ elementary_src = [
   'efl_ui_image.c',
   'elm_index.c',
   'efl_access_object.c',
+  'efl_access_object2.c',
   'efl_access_action.c',
   'efl_access_component.c',
   'efl_access_editable_text.c',

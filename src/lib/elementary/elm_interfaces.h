@@ -1,4 +1,6 @@
+#include "efl_access_provider.h"
 #include "efl_access_object.h"
+#include "efl_access_object2.h"
 #include "efl_access_text.h"
 #include "efl_access_widget_action.h"
 #include "efl_access_window.h"
